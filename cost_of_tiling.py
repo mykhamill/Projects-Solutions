@@ -41,6 +41,7 @@ def main():
     units = units + "s"
 
   text = "The cost of tiling the area {w} {wu} by {h} {hu} which is {area} {u} squared is {total_cost:.2f} {c}"
+
   print text.format(w = width,
                     h = height,
                     area = width * height,
