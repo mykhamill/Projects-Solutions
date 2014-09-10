@@ -52,14 +52,15 @@ class Main(object):
     self.input = ""
     self.output = ""
     self.matches = []
-    # if os.path.exists(HISTORY_FILENAME):
-    #   readline.read_history_file(HISTORY_FILENAME)
-    # readline.set_completer(Main.complete)
-    # readline.set_completion_display_matches_hook(Main.history_display)
-    # readline.parse_and_bind("tab: complete")
+    if os.path.exists(HISTORY_FILENAME):
+      readline.read_history_file(HISTORY_FILENAME)
+    readline.set_completer(Main.complete)
+    readline.set_completion_display_matches_hook(Main.history_display)
+    readline.parse_and_bind("tab: complete")
 
   def complete(self, text, state):
     response = None
+    readline.insert_text(self.prompt)
     if state == 0:
       history_values = get_history_items()
       logging.debug("history: {}".format(history_values))
@@ -69,7 +70,7 @@ class Main(object):
         self.matches = []
       logging.debug("matches: {}".format(self.matches))
     try:
-      response = self.prompt + " " + self.matches[state]
+      response = self.matches[state]
     except IndexError:
       response = None
     logging.debug("complete({}{}) => {}".format(repr(text), state, repr(response)))
@@ -78,11 +79,8 @@ class Main(object):
   def history_display(self, sub, matches, longest_match_length):
     logging.debug("history_dispy: sub = %s, matches = %s, lml = %s" % (sub, repr(matches, longest_match_length)))
 
-  def display_prompt(self):
-    print "\n" + self.prompt,
-
   def read_input(self):
-    self.input = raw_input().strip()
+    self.input = raw_input(self.prompt).strip()
 
   def parse_calculation(self):
     input = self.input
@@ -98,13 +96,12 @@ class Main(object):
   def main(self):
     try:
       while self.cont:
-        self.display_prompt()
         self.read_input()
         self.parse_calculation()
         if self.cont:
           self.display_output()
     finally:
-      # readline.write_history_file(HISTORY_FILENAME)
+      readline.write_history_file(HISTORY_FILENAME)
 
 run = Main()
 main = run.main
