@@ -38,4 +38,7 @@ nosetests.xml
 .komodotools/
 *.komodoproject
 
+# Vim
+*.swp
+
 .DS_Store
